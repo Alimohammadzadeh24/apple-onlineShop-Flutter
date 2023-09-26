@@ -124,17 +124,18 @@ class BasketScreen extends StatelessWidget {
               height: 53,
               width: MediaQuery.of(context).size.width - 64,
               child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      )),
-                  child: const Text(
-                    'ادامه فرآیند خرید',
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 18, fontFamily: 'SB'),
-                  )),
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomColors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    )),
+                child: const Text(
+                  'ادامه فرآیند خرید',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 18, fontFamily: 'SB'),
+                ),
+              ),
             ),
           )
         ],

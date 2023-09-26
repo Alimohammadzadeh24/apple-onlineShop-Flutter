@@ -1,18 +1,19 @@
 import 'dart:ui';
 
 import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/bloc/authentication/auth_bloc.dart';
 import 'package:apple_online_shop/data/dependency_Injection/di.dart';
-import 'package:apple_online_shop/data/repository/authentication_repository.dart';
 import 'package:apple_online_shop/screens/basket_screen.dart';
 import 'package:apple_online_shop/screens/category_screen.dart';
 import 'package:apple_online_shop/screens/home_screen.dart';
+import 'package:apple_online_shop/screens/login_screen.dart';
 import 'package:apple_online_shop/screens/profile_screen.dart';
-import 'package:apple_online_shop/data/utils/auth_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  getItInit();
+  await getItInit();
   runApp(const Application());
 }
 
@@ -43,41 +44,11 @@ class _ApplicationState extends State<Application> {
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: CustomColors.backgroundColor,
-          body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: double.infinity),
-                ElevatedButton(
-                  onPressed: () async {
-                    await AuthenticationRepository()
-                        .login('Alimmz1', '12345678');
-                  },
-                  child: const Text('Login'),
-                ),
-                ElevatedButton(
-                  onPressed: () async => AuthManager.logout(),
-                  child: const Text('Logout'),
-                ),
-                const SizedBox(height: 20),
-                ValueListenableBuilder(
-                  valueListenable: AuthManager.authChangeNotifire,
-                  builder: (context, value, child) {
-                    if (value == null || value.isEmpty) {
-                      return const Text('لطفا وارد شوید');
-                    } else {
-                      return const Text('شما وارد شده اید');
-                    }
-                  },
-                )
-              ],
-            ),
-            // IndexedStack(
-            //   index: selectedBottomNavigationBarIndex,
-            //   children: getScreens(),
-            // ),
+          body: BlocProvider(
+            create: (context) => AuthBloc(),
+            child: const LoginScreen(),
           ),
           bottomNavigationBar: ClipRRect(
             child: BackdropFilter(

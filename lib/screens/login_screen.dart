@@ -3,7 +3,6 @@ import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/bloc/authentication/auth_bloc.dart';
 import 'package:apple_online_shop/bloc/authentication/auth_event.dart';
 import 'package:apple_online_shop/bloc/authentication/auth_state.dart';
-import 'package:apple_online_shop/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

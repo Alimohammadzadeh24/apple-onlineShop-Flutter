@@ -2,6 +2,7 @@ import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/Widgets/Home/banner_slider.dart';
 import 'package:apple_online_shop/Widgets/Home/category_ho_list.dart';
 import 'package:apple_online_shop/Widgets/Home/product_ho_list.dart';
+import 'package:apple_online_shop/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -84,18 +85,21 @@ class HomeScreen extends StatelessWidget {
                           color: CustomColors.grey,
                         ),
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            'مشاهده همه',
-                            style: TextStyle(
-                              fontFamily: 'SB',
-                              color: CustomColors.blue,
+                      InkWell(
+                        onTap: () => NavigateToProductList(context),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'مشاهده همه',
+                              style: TextStyle(
+                                fontFamily: 'SB',
+                                color: CustomColors.blue,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 5),
-                          Image.asset('assets/images/icon_left_categroy.png')
-                        ],
+                            const SizedBox(width: 5),
+                            Image.asset('assets/images/icon_left_categroy.png')
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -118,24 +122,27 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'پرفروش ترین ها',
+                        'پر بازدیدترین ها',
                         style: TextStyle(
                           fontFamily: 'SB',
                           color: CustomColors.grey,
                         ),
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            'مشاهده همه',
-                            style: TextStyle(
-                              fontFamily: 'SB',
-                              color: CustomColors.blue,
+                      InkWell(
+                        onTap: () => NavigateToProductList(context),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'مشاهده همه',
+                              style: TextStyle(
+                                fontFamily: 'SB',
+                                color: CustomColors.blue,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 5),
-                          Image.asset('assets/images/icon_left_categroy.png')
-                        ],
+                            const SizedBox(width: 5),
+                            Image.asset('assets/images/icon_left_categroy.png')
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -148,5 +155,10 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void NavigateToProductList(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProductListScreen()));
   }
 }

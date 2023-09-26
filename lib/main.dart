@@ -1,11 +1,18 @@
 import 'dart:ui';
 
 import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/data/dependency_Injection/di.dart';
+import 'package:apple_online_shop/data/repository/authentication_repository.dart';
+import 'package:apple_online_shop/screens/basket_screen.dart';
 import 'package:apple_online_shop/screens/category_screen.dart';
 import 'package:apple_online_shop/screens/home_screen.dart';
+import 'package:apple_online_shop/screens/profile_screen.dart';
+import 'package:apple_online_shop/data/utils/auth_manager.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  getItInit();
   runApp(const Application());
 }
 
@@ -23,8 +30,8 @@ class _ApplicationState extends State<Application> {
     return [
       const HomeScreen(),
       const CategoryScreen(),
-      const HomeScreen(),
-      const HomeScreen(),
+      const BasketScreen(),
+      const ProfileScreen(),
     ];
   }
 
@@ -38,10 +45,39 @@ class _ApplicationState extends State<Application> {
         child: Scaffold(
           backgroundColor: CustomColors.backgroundColor,
           body: SafeArea(
-            child: IndexedStack(
-              index: selectedBottomNavigationBarIndex,
-              children: getScreens(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(width: double.infinity),
+                ElevatedButton(
+                  onPressed: () async {
+                    await AuthenticationRepository()
+                        .login('Alimmz1', '12345678');
+                  },
+                  child: const Text('Login'),
+                ),
+                ElevatedButton(
+                  onPressed: () async => AuthManager.logout(),
+                  child: const Text('Logout'),
+                ),
+                const SizedBox(height: 20),
+                ValueListenableBuilder(
+                  valueListenable: AuthManager.authChangeNotifire,
+                  builder: (context, value, child) {
+                    if (value == null || value.isEmpty) {
+                      return const Text('لطفا وارد شوید');
+                    } else {
+                      return const Text('شما وارد شده اید');
+                    }
+                  },
+                )
+              ],
             ),
+            // IndexedStack(
+            //   index: selectedBottomNavigationBarIndex,
+            //   children: getScreens(),
+            // ),
           ),
           bottomNavigationBar: ClipRRect(
             child: BackdropFilter(

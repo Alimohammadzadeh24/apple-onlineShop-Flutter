@@ -1,4 +1,4 @@
-import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class CategoryScreen extends StatelessWidget {
@@ -8,36 +8,32 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-            child: Container(
-              height: 46.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'دسته بندی',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: CustomColors.blue,
-                        ),
-                      ),
-                    ),
-                    Image.asset('assets/images/icon_apple_blue.png'),
-                  ],
-                ),
-              ),
-            ),
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+            child: ScreenAppBar(title: 'دسته بندی')
           ),
         ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          sliver: SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12)),
+                );
+              },
+              childCount: 10,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 30,
+              mainAxisSpacing: 30,
+            ),
+          ),
+        )
       ],
     );
   }

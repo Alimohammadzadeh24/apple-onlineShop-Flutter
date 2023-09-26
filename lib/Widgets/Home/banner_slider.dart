@@ -23,7 +23,7 @@ class BannerSlider extends StatelessWidget {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: CustomColors.green,
+                    color: CustomColors.red,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

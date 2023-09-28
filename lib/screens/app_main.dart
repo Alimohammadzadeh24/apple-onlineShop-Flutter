@@ -32,9 +32,11 @@ class _AppMainState extends State<AppMain> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.backgroundColor,
-        body: IndexedStack(
-          index: selectedBottomNavigationBarIndex,
-          children: getScreens(),
+        body: SafeArea(
+          child: IndexedStack(
+            index: selectedBottomNavigationBarIndex,
+            children: getScreens(),
+          ),
         ),
         bottomNavigationBar: ClipRRect(
           child: BackdropFilter(

@@ -39,7 +39,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             } else if (state is CategoryResponseState) {
               return state.response.fold(
                 (l) {
-                  return SliverToBoxAdapter(child: Text(l),);
+                  return SliverToBoxAdapter(
+                    child: Text(l),
+                  );
                 },
                 (r) {
                   return ListCategory(
@@ -50,7 +52,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             }
             return const SliverToBoxAdapter(child: Text('error'));
           },
-        )
+        ),
       ],
     );
   }
@@ -59,7 +61,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 // ignore: must_be_immutable
 class ListCategory extends StatelessWidget {
   List<Category>? list;
-  ListCategory({super.key, required this.list});
+  ListCategory({super.key, this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +76,8 @@ class ListCategory extends StatelessWidget {
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 30,
-          mainAxisSpacing: 30,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
         ),
       ),
     );

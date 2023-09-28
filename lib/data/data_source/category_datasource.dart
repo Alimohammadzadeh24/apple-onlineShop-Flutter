@@ -13,7 +13,7 @@ class CagetoryRemote extends ICategoryDataSource {
   @override
   Future<List<Category>> getCategories() async {
     try {
-      final response = await _dio.get('collection/category/records');
+      final response = await _dio.get('collections/category/records');
       return response.data['items']
           .map<Category>((jsonObject) => Category.fromMapJson(jsonObject))
           .toList();

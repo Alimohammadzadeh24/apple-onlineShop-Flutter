@@ -4,6 +4,8 @@ import 'package:apple_online_shop/Widgets/Home/category_ho_list.dart';
 import 'package:apple_online_shop/Widgets/Home/product_ho_list.dart';
 import 'package:apple_online_shop/bloc/home/home_bloc.dart';
 import 'package:apple_online_shop/bloc/home/home_event.dart';
+import 'package:apple_online_shop/bloc/home/home_state.dart';
+import 'package:apple_online_shop/data/model/banners.dart';
 import 'package:apple_online_shop/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,14 +26,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
+    return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        return const CustomScrollView(
+        return CustomScrollView(
           slivers: [
-            _SearchBox(),
-            _BannerSlider(),
-            _CategoryList(),
-            _ProductList()
+            if (state is HomeLoadingStateState) ...[
+              const SliverToBoxAdapter(child: CircularProgressIndicator())
+            ],
+            if (state is HomeRequestSuccessState) ...[
+              const _SearchBox(),
+              state.bannerList.fold(
+                (l) {
+                  return const SliverToBoxAdapter(child: Text('Ali'));
+                },
+                (r) {
+                  return _BannerSlider(r);
+                },
+              )
+            ]
+            // _CategoryList(),
+            // _ProductList()
           ],
         );
       },
@@ -119,15 +133,17 @@ class _CategoryList extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class _BannerSlider extends StatelessWidget {
-  const _BannerSlider();
+  List<Banners>? list;
+  _BannerSlider(this.list);
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.only(bottom: 20),
-        child: BannerSlider(),
+        padding: const EdgeInsets.only(bottom: 20),
+        child: BannerSlider(list: list),
       ),
     );
   }

@@ -18,7 +18,9 @@ class CachedImage extends StatelessWidget {
         placeholder: (context, url) => Shimmer.fromColors(
           baseColor: CustomColors.grey,
           highlightColor: Colors.grey.shade100,
-          child: const Text('ali'),
+          child: Container(
+            color: CustomColors.backgroundColor,
+          ),
         ),
       ),
     );

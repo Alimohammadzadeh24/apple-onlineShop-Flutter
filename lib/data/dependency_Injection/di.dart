@@ -1,5 +1,5 @@
-import 'package:apple_online_shop/data/data_source/authentication_datasource.dart';
-import 'package:apple_online_shop/data/repository/authentication_repository.dart';
+import 'package:apple_online_shop/data/Auth/authentication_datasource.dart';
+import 'package:apple_online_shop/data/Auth/authentication_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';

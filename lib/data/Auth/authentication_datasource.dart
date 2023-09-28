@@ -1,5 +1,5 @@
 import 'package:apple_online_shop/data/dependency_Injection/di.dart';
-import 'package:apple_online_shop/data/utils/api_exception.dart';
+import 'package:apple_online_shop/data/errors/api_exception.dart';
 import 'package:dio/dio.dart';
 
 abstract class IAuthenticationDataSourcec {

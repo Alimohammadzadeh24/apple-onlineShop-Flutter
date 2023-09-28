@@ -1,8 +1,25 @@
+import 'package:apple_online_shop/Widgets/Category/cached_image.dart';
 import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
+import 'package:apple_online_shop/bloc/category/category_bloc.dart';
+import 'package:apple_online_shop/bloc/category/category_event.dart';
+import 'package:apple_online_shop/bloc/category/category_state.dart';
+import 'package:apple_online_shop/data/model/category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<CategoryBloc>(context).add(CategoryRequestEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,31 +27,57 @@ class CategoryScreen extends StatelessWidget {
       slivers: [
         const SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-            child: ScreenAppBar(title: 'دسته بندی')
-          ),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+              child: ScreenAppBar(title: 'دسته بندی')),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-          sliver: SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(12)),
-                );
-              },
-              childCount: 10,
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 30,
-            ),
-          ),
+        BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            if (state is CategoryLoadingState) {
+              return const SliverToBoxAdapter(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is CategoryResponseState) {
+              return state.response.fold(
+                (l) {
+                  return SliverToBoxAdapter(child: Text(l),);
+                },
+                (r) {
+                  return ListCategory(
+                    list: r,
+                  );
+                },
+              );
+            }
+            return const SliverToBoxAdapter(child: Text('error'));
+          },
         )
       ],
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ListCategory extends StatelessWidget {
+  List<Category>? list;
+  ListCategory({super.key, required this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return CachedImage(imageUrl: list?[index].thumbnail);
+          },
+          childCount: list?.length ?? 0,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
+        ),
+      ),
     );
   }
 }

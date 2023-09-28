@@ -1,7 +1,7 @@
 import 'package:apple_online_shop/bloc/authentication/auth_event.dart';
 import 'package:apple_online_shop/bloc/authentication/auth_state.dart';
 import 'package:apple_online_shop/data/dependency_Injection/di.dart';
-import 'package:apple_online_shop/data/Auth/authentication_repository.dart';
+import 'package:apple_online_shop/data/repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {

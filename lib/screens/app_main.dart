@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/bloc/category/category_bloc.dart';
+import 'package:apple_online_shop/bloc/home/home_bloc.dart';
 import 'package:apple_online_shop/screens/basket_screen.dart';
 import 'package:apple_online_shop/screens/category_screen.dart';
 import 'package:apple_online_shop/screens/home_screen.dart';
 import 'package:apple_online_shop/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppMain extends StatefulWidget {
   const AppMain({super.key});
@@ -18,8 +21,14 @@ class _AppMainState extends State<AppMain> {
 
   List<Widget> getScreens() {
     return [
-      const HomeScreen(),
-      const CategoryScreen(),
+      BlocProvider(
+        create: (context) => HomeBloc(),
+        child: const HomeScreen(),
+      ),
+      BlocProvider(
+        create: (context) => CategoryBloc(),
+        child: const CategoryScreen(),
+      ),
       const BasketScreen(),
       const ProfileScreen(),
     ];
@@ -63,50 +72,73 @@ class _AppMainState extends State<AppMain> {
               elevation: 0,
               items: [
                 BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_home.png'),
-                  ),
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_home_active.png'),
-                  ),
-                  label: 'خانه',
-                ),
+                    icon: Image.asset('assets/images/icon_home.png'),
+                    activeIcon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Container(
+                        decoration: const BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: CustomColors.blue,
+                              blurRadius: 20,
+                              spreadRadius: -7,
+                              offset: Offset(0.0, 13))
+                        ]),
+                        child:
+                            Image.asset('assets/images/icon_home_active.png'),
+                      ),
+                    ),
+                    label: 'خانه'),
                 BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_category.png'),
-                  ),
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child:
-                        Image.asset('assets/images/icon_category_active.png'),
-                  ),
-                  label: 'دسته بندی ها',
-                ),
+                    icon: Image.asset('assets/images/icon_category.png'),
+                    activeIcon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Container(
+                        decoration: const BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: CustomColors.blue,
+                              blurRadius: 20,
+                              spreadRadius: -7,
+                              offset: Offset(0.0, 13))
+                        ]),
+                        child: Image.asset(
+                            'assets/images/icon_category_active.png'),
+                      ),
+                    ),
+                    label: 'دسته بندی'),
                 BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_basket.png'),
-                  ),
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_basket_active.png'),
-                  ),
-                  label: 'سبد خرید',
-                ),
+                    icon: Image.asset('assets/images/icon_basket.png'),
+                    activeIcon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Container(
+                        decoration: const BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: CustomColors.blue,
+                              blurRadius: 20,
+                              spreadRadius: -7,
+                              offset: Offset(0.0, 13))
+                        ]),
+                        child:
+                            Image.asset('assets/images/icon_basket_active.png'),
+                      ),
+                    ),
+                    label: 'سبد خرید'),
                 BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_profile.png'),
-                  ),
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Image.asset('assets/images/icon_profile_active.png'),
-                  ),
-                  label: 'پروفایل',
-                ),
+                    icon: Image.asset('assets/images/icon_profile.png'),
+                    activeIcon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Container(
+                        decoration: const BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: CustomColors.blue,
+                              blurRadius: 20,
+                              spreadRadius: -7,
+                              offset: Offset(0.0, 13))
+                        ]),
+                        child: Image.asset(
+                            'assets/images/icon_profile_active.png'),
+                      ),
+                    ),
+                    label: 'حساب کاربری'),
               ],
             ),
           ),

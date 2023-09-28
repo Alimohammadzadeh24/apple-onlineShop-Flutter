@@ -7,7 +7,7 @@ class BannerSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = PageController(viewportFraction: 0.8);
+    var controller = PageController(viewportFraction: 0.8, initialPage: 1);
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [

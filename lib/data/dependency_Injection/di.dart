@@ -1,5 +1,9 @@
-import 'package:apple_online_shop/data/Auth/authentication_datasource.dart';
-import 'package:apple_online_shop/data/Auth/authentication_repository.dart';
+import 'package:apple_online_shop/data/data_source/authentication_datasource.dart';
+import 'package:apple_online_shop/data/data_source/banner_datasource.dart';
+import 'package:apple_online_shop/data/data_source/category_datasource.dart';
+import 'package:apple_online_shop/data/repository/authentication_repository.dart';
+import 'package:apple_online_shop/data/repository/banner_repository.dart';
+import 'package:apple_online_shop/data/repository/category_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +23,15 @@ Future<void> getItInit() async {
   locator.registerFactory<IAuthenticationDataSourcec>(
     () => AuthenticationRemote(),
   );
+  locator.registerFactory<ICategoryDataSource>(
+    () => CagetoryRemote(),
+  );
+  locator.registerFactory<IBannerDatasource>(
+    () => BannerRemote(),
+  );
 
   //repositories
   locator.registerFactory<IAuthRepository>(() => AuthenticationRepository());
+  locator.registerFactory<ICategoryRepository>(() => CategoryRepository());
+  locator.registerFactory<IBannerRepository>(() => Bannerrepository());
 }

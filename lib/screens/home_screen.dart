@@ -1,11 +1,12 @@
 import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/Widgets/Home/banner_slider.dart';
-import 'package:apple_online_shop/Widgets/Home/category_ho_list.dart';
-import 'package:apple_online_shop/Widgets/Home/product_ho_list.dart';
+import 'package:apple_online_shop/Widgets/Home/home_category_list.dart';
+import 'package:apple_online_shop/Widgets/Home/home_product_list.dart';
 import 'package:apple_online_shop/bloc/home/home_bloc.dart';
 import 'package:apple_online_shop/bloc/home/home_event.dart';
 import 'package:apple_online_shop/bloc/home/home_state.dart';
 import 'package:apple_online_shop/data/model/banners.dart';
+import 'package:apple_online_shop/data/model/category.dart';
 import 'package:apple_online_shop/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,10 +43,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 (r) {
                   return _BannerSlider(r);
                 },
-              )
+              ),
+              state.categoryList.fold(
+                (l) {
+                  return const SliverToBoxAdapter(child: Text('Ali'));
+                },
+                (r) {
+                  return _CategoryList(r);
+                },
+              ),
+              const _ProductList()
             ]
-            // _CategoryList(),
-            // _ProductList()
           ],
         );
       },
@@ -107,25 +115,27 @@ class _ProductList extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class _CategoryList extends StatelessWidget {
-  const _CategoryList();
+  _CategoryList(this.categoryList);
+  List<Category>? categoryList;
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.only(top: 20, bottom: 20, right: 24),
+        padding: const EdgeInsets.only(top: 20, bottom: 20, right: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'دسته بندی',
               style: TextStyle(
                 fontFamily: 'SB',
                 color: CustomColors.grey,
               ),
             ),
-            CategoryHorizontalListItem()
+            CategoryHorizontalListItem(categoryList: categoryList,)
           ],
         ),
       ),

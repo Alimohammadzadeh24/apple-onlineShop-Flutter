@@ -1,5 +1,5 @@
 import 'package:apple_online_shop/Constant/color.dart';
-import 'package:apple_online_shop/Widgets/Home/category_ho_list.dart';
+// import 'package:apple_online_shop/Widgets/Home/home_category_list.dart';
 import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -28,23 +28,23 @@ class ProfileScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 40),
-          Wrap(
-            runSpacing: 10,
-            spacing: 43,
-            children: [
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-              CategoryListItem(),
-            ],
-          ),
+          // Wrap(
+          //   runSpacing: 10,
+          //   spacing: 43,
+          //   children: [
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //     CategoryListItem(),
+          //   ],
+          // ),
           Spacer(),
           Text(
             'اپل آنلاین شاپ',

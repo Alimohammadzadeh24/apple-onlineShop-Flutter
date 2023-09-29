@@ -10,6 +10,7 @@ import 'package:apple_online_shop/data/model/category.dart';
 import 'package:apple_online_shop/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,35 +30,54 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        return CustomScrollView(
-          slivers: [
-            if (state is HomeLoadingStateState) ...[
-              const SliverToBoxAdapter(child: CircularProgressIndicator())
-            ],
-            if (state is HomeRequestSuccessState) ...[
-              const _SearchBox(),
-              state.bannerList.fold(
-                (l) {
-                  return const SliverToBoxAdapter(child: Text('Ali'));
-                },
-                (r) {
-                  return _BannerSlider(r);
-                },
-              ),
-              state.categoryList.fold(
-                (l) {
-                  return const SliverToBoxAdapter(child: Text('Ali'));
-                },
-                (r) {
-                  return _CategoryList(r);
-                },
-              ),
-              const _ProductList()
-            ]
-          ],
-        );
+        return _getHomeContent(state);
       },
     );
+  }
+}
+
+Widget _getHomeContent(HomeState state) {
+  if (state is HomeLoadingState) {
+    return const Center(
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: Center(
+          child: LoadingIndicator(
+            indicatorType: Indicator.ballRotateChase,
+            colors: [CustomColors.blue],
+            strokeWidth: 2,
+          ),
+        ),
+      ),
+    );
+  } 
+  else if (state is HomeRequestSuccessState) {
+    return CustomScrollView(
+      slivers: [
+        const _SearchBox(),
+        state.bannerList.fold(
+          (l) {
+            return const SliverToBoxAdapter(child: Text('Ali'));
+          },
+          (r) {
+            return _BannerSlider(r);
+          },
+        ),
+        state.categoryList.fold(
+          (l) {
+            return const SliverToBoxAdapter(child: Text('Ali'));
+          },
+          (r) {
+            return _CategoryList(r);
+          },
+        ),
+        const _ProductList()
+      ],
+    );
+  } 
+  else {
+    return const Text('Ali');
   }
 }
 
@@ -135,7 +155,9 @@ class _CategoryList extends StatelessWidget {
                 color: CustomColors.grey,
               ),
             ),
-            CategoryHorizontalListItem(categoryList: categoryList,)
+            CategoryHorizontalListItem(
+              categoryList: categoryList,
+            )
           ],
         ),
       ),

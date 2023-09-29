@@ -6,7 +6,7 @@ abstract class HomeState {}
 
 class HomeInitialState extends HomeState {}
 
-class HomeLoadingStateState extends HomeState {}
+class HomeLoadingState extends HomeState {}
 
 class HomeRequestSuccessState extends HomeState {
   Either<String, List<Banners>> bannerList;

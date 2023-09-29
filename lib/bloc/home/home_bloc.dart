@@ -11,7 +11,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitialState()) {
     on<HomeGetInitializedDataEvent>(
       (event, emit) async {
-        emit(HomeLoadingStateState());
+        emit(HomeLoadingState());
         final bannerList = await _bannerRepository.getBanners();
         final categoryList = await _categoryRepository.getCategories();
         emit(HomeRequestSuccessState(bannerList,categoryList));

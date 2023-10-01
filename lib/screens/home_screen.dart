@@ -7,6 +7,7 @@ import 'package:apple_online_shop/bloc/home/home_event.dart';
 import 'package:apple_online_shop/bloc/home/home_state.dart';
 import 'package:apple_online_shop/data/model/banners.dart';
 import 'package:apple_online_shop/data/model/category.dart';
+import 'package:apple_online_shop/data/model/product.dart';
 import 'package:apple_online_shop/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,8 +52,7 @@ Widget _getHomeContent(HomeState state) {
         ),
       ),
     );
-  } 
-  else if (state is HomeRequestSuccessState) {
+  } else if (state is HomeRequestSuccessState) {
     return CustomScrollView(
       slivers: [
         const _SearchBox(),
@@ -72,17 +72,37 @@ Widget _getHomeContent(HomeState state) {
             return _CategoryList(r);
           },
         ),
-        const _ProductList()
+        state.bestSellerProductList.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: Text(l),
+            );
+          },
+          (r) {
+            return _ProductList(r, 'پرفروش ترین ها');
+          },
+        ),
+        state.hotestProductList.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: Text(l),
+            );
+          },
+          (r) {
+            return _ProductList(r, 'پربازدیدترین ها');
+          },
+        ),
       ],
     );
-  } 
-  else {
+  } else {
     return const Text('Ali');
   }
 }
 
 class _ProductList extends StatelessWidget {
-  const _ProductList();
+  final List<Product> list;
+  final String title;
+  const _ProductList(this.list, this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +117,9 @@ class _ProductList extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'پرفروش ترین ها',
-                    style: TextStyle(
+                  Text(
+                    title,
+                    style: const TextStyle(
                       fontFamily: 'SB',
                       color: CustomColors.grey,
                     ),
@@ -108,7 +128,9 @@ class _ProductList extends StatelessWidget {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProductListScreen())),
+                            builder: (context) => ProductListScreen(
+                                  list: list,
+                                ))),
                     child: Row(
                       children: [
                         const Text(
@@ -127,7 +149,7 @@ class _ProductList extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const ProductHorizontalListItem()
+            ProductHorizontalListItem(productList: list)
           ],
         ),
       ),

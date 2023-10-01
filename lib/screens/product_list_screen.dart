@@ -1,10 +1,12 @@
 import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/Widgets/Home/home_product_list.dart';
 import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
+import 'package:apple_online_shop/data/model/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductListScreen extends StatelessWidget {
-  const ProductListScreen({super.key});
+  final List<Product> list;
+  const ProductListScreen({super.key, required this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,11 @@ class ProductListScreen extends StatelessWidget {
                 sliver: SliverGrid(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      return const ProductItem();
+                      return ProductItem(
+                        product: list[index],
+                      );
                     },
-                    childCount: 10,
+                    childCount: list.length,
                   ),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,

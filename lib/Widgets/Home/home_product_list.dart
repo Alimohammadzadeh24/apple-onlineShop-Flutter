@@ -1,8 +1,11 @@
 import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/data/model/product.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductHorizontalListItem extends StatelessWidget {
-  const ProductHorizontalListItem({super.key});
+  final List<Product>? productList;
+  const ProductHorizontalListItem({super.key, this.productList});
 
   @override
   Widget build(BuildContext context) {
@@ -10,11 +13,13 @@ class ProductHorizontalListItem extends StatelessWidget {
       height: 300,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
+        itemCount: productList!.length,
         itemBuilder: (context, index) {
-          return const Padding(
-            padding: EdgeInsets.only(left: 24),
-            child: ProductItem(),
+          return Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: ProductItem(
+              product: productList![index],
+            ),
           );
         },
       ),
@@ -23,7 +28,8 @@ class ProductHorizontalListItem extends StatelessWidget {
 }
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({super.key});
+  final Product product;
+  const ProductItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +59,9 @@ class ProductItem extends StatelessWidget {
                   alignment: AlignmentDirectional.center,
                   children: [
                     const SizedBox(width: double.infinity),
-                    Image.asset(
-                      'assets/images/iphone.png',
+                    CachedNetworkImage(
+                      imageUrl: product.thumbnail,
+                      width: 100,
                     ),
                     Positioned(
                       top: 0,
@@ -73,10 +80,10 @@ class ProductItem extends StatelessWidget {
                           color: CustomColors.red,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            '5%',
-                            style: TextStyle(
+                            '%${product.percent?.round().toString()}',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                             ),
@@ -87,11 +94,12 @@ class ProductItem extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 40),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 0, right: 10),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 0, right: 10),
                   child: Text(
-                    'آیفون 13 پرومکس',
-                    style: TextStyle(
+                    product.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontFamily: 'SB',
                     ),
                   ),
@@ -128,21 +136,21 @@ class ProductItem extends StatelessWidget {
                     'assets/images/icon_right_arrow_cricle.png',
                   ),
                   const Spacer(),
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '48،800،000',
-                        style: TextStyle(
+                        '${product.price}',
+                        style: const TextStyle(
                           color: Colors.white,
                           decoration: TextDecoration.lineThrough,
                           decorationThickness: 2,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        '47،800،000',
-                        style: TextStyle(
+                        product.realPrice.toString(),
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
                       ),

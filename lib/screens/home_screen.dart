@@ -126,11 +126,14 @@ class _ProductList extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductListScreen(
-                                  list: list,
-                                ))),
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductListScreen(
+                          list: list,
+                          appBarTitle: title,
+                        ),
+                      ),
+                    ),
                     child: Row(
                       children: [
                         const Text(

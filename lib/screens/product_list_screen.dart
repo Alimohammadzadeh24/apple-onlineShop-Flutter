@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class ProductListScreen extends StatelessWidget {
   final List<Product> list;
-  const ProductListScreen({super.key, required this.list});
+  final String appBarTitle;
+  const ProductListScreen({super.key, required this.list , required this.appBarTitle});
 
   @override
   Widget build(BuildContext context) {

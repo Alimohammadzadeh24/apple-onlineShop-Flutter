@@ -18,11 +18,11 @@ class ProductListScreen extends StatelessWidget {
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                   child: ScreenAppBar(
-                    title: 'پربازدید و پرفروش ترین ها',
+                    title: appBarTitle,
                     havePop: true,
                   ),
                 ),

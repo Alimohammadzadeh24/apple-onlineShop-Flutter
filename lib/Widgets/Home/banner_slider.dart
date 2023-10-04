@@ -1,5 +1,5 @@
 import 'package:apple_online_shop/Constant/color.dart';
-import 'package:apple_online_shop/Widgets/Category/cached_image.dart';
+import 'package:apple_online_shop/Widgets/cached_image.dart';
 // import 'package:apple_online_shop/bloc/home/home_bloc.dart';
 import 'package:apple_online_shop/data/model/banners.dart';
 import 'package:flutter/material.dart';

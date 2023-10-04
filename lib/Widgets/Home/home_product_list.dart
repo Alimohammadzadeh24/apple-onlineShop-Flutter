@@ -1,8 +1,10 @@
 import 'package:apple_online_shop/Constant/color.dart';
+import 'package:apple_online_shop/bloc/product/product_bloc.dart';
 import 'package:apple_online_shop/data/model/product.dart';
 import 'package:apple_online_shop/screens/product_detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductHorizontalListItem extends StatelessWidget {
   final List<Product>? productList;
@@ -39,7 +41,12 @@ class ProductItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProductDetailScreen(),
+            builder: (context) => BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductDetailScreen(
+                productId: product.id,
+              ),
+            ),
           ),
         );
       },

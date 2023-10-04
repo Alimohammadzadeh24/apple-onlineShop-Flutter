@@ -5,15 +5,16 @@ import 'package:apple_online_shop/data/model/product_image.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class IProductGalleryRepository {
-  Future<Either<String, List<Productimage>>> getGallery();
+  Future<Either<String, List<Productimage>>> getGallery(String productId);
 }
 
 class ProductGalleryRepository implements IProductGalleryRepository {
   final IProductGalleryDatasource _dataSource = locator.get();
   @override
-  Future<Either<String, List<Productimage>>> getGallery() async {
+  Future<Either<String, List<Productimage>>> getGallery(
+      String productId) async {
     try {
-      var response = await _dataSource.getGallery();
+      final response = await _dataSource.getGallery(productId);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'متنی ندارد');

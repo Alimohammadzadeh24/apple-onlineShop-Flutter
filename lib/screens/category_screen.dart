@@ -1,4 +1,4 @@
-import 'package:apple_online_shop/Widgets/Category/cached_image.dart';
+import 'package:apple_online_shop/Widgets/cached_image.dart';
 import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
 import 'package:apple_online_shop/bloc/category/category_bloc.dart';
 import 'package:apple_online_shop/bloc/category/category_event.dart';

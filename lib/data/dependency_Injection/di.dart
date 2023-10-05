@@ -2,11 +2,11 @@ import 'package:apple_online_shop/data/data_source/authentication_datasource.dar
 import 'package:apple_online_shop/data/data_source/banner_datasource.dart';
 import 'package:apple_online_shop/data/data_source/category_datasource.dart';
 import 'package:apple_online_shop/data/data_source/product_datasource.dart';
-import 'package:apple_online_shop/data/data_source/product_gallery_datasource.dart';
+import 'package:apple_online_shop/data/data_source/product_details_datasource.dart';
 import 'package:apple_online_shop/data/repository/authentication_repository.dart';
 import 'package:apple_online_shop/data/repository/banner_repository.dart';
 import 'package:apple_online_shop/data/repository/category_repository.dart';
-import 'package:apple_online_shop/data/repository/product_gallery_repository.dart';
+import 'package:apple_online_shop/data/repository/product_details_repository.dart';
 import 'package:apple_online_shop/data/repository/product_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -28,13 +28,13 @@ Future<void> getItInit() async {
   locator.registerFactory<IBannerDatasource>(() => BannerRemote());
   locator.registerFactory<IProductDataSource>(() => ProductsRemote());
   locator
-      .registerFactory<IProductGalleryDatasource>(() => ProductGalleryRemote());
+      .registerFactory<IProductDetailsDatasource>(() => ProductDetailsRemote());
 
   //repositories
   locator.registerFactory<IAuthRepository>(() => AuthenticationRepository());
   locator.registerFactory<ICategoryRepository>(() => CategoryRepository());
   locator.registerFactory<IBannerRepository>(() => Bannerrepository());
   locator.registerFactory<IProductsRepository>(() => ProductsRepository());
-  locator.registerFactory<IProductGalleryRepository>(
-      () => ProductGalleryRepository());
+  locator.registerFactory<IProductDetailsRepository>(
+      () => ProductDetailsRepository());
 }

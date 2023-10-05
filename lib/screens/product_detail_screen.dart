@@ -7,6 +7,8 @@ import 'package:apple_online_shop/bloc/product/product_bloc.dart';
 import 'package:apple_online_shop/bloc/product/product_event.dart';
 import 'package:apple_online_shop/bloc/product/product_state.dart';
 import 'package:apple_online_shop/data/model/product_image.dart';
+import 'package:apple_online_shop/data/model/product_variant.dart';
+import 'package:apple_online_shop/data/model/variant_type.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
-  const ProductDetailScreen({super.key , required this.productId});
+  const ProductDetailScreen({super.key, required this.productId});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -23,7 +25,8 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
-    BlocProvider.of<ProductBloc>(context).add(ProductInitialEvent(productId: widget.productId));
+    BlocProvider.of<ProductBloc>(context)
+        .add(ProductInitialEvent(productId: widget.productId));
     super.initState();
   }
 
@@ -89,80 +92,27 @@ Widget _getProductDetailScreenContent(ProductState state) {
         const SliverPadding(
           padding: EdgeInsets.only(bottom: 8),
         ),
-        state.getProductImgage.fold((l) {
+        state.productImgage.fold((l) {
           return const SliverToBoxAdapter(
             child: Text('خطای بارگیرری عکس ها'),
           );
         }, (r) {
           return _GalleryWidget(r);
         }),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Text('انخاب رنگ'),
-                ),
-                SizedBox(
-                  height: 28,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(left: 12),
-                        width: 28,
-                        decoration: BoxDecoration(
-                          color: CustomColors.green,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Text('انخاب حافظه داخلی'),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(left: 12),
-                        width: 64,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          // border: Border.all(
-                          //   width: 1,
-                          //   color: Colors.black,
-                          // ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(child: Text('128')),
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+        state.productVariant.fold((l) {
+          return SliverToBoxAdapter(
+            child: Text(l),
+          );
+        }, (productVariantList) {
+          for (var productVariant in productVariantList) {
+            if (productVariant.variantList.isNotEmpty) {
+              return _VariantContainer(productVariant);
+            }
+          }
+          return const SliverToBoxAdapter(
+            child: Text('error'),
+          );
+        }),
         SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           sliver: SliverToBoxAdapter(
@@ -388,6 +338,85 @@ Widget _getProductDetailScreenContent(ProductState state) {
     );
   } else {
     return const Text('Error');
+  }
+}
+
+class _VariantContainer extends StatelessWidget {
+  final ProductVariant productVariant;
+  const _VariantContainer(this.productVariant);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(productVariant.variantType.title!),
+            ),
+            if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
+              _getColorVariantContainer(),
+            },
+            if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
+              _getStorageVariantContainer(),
+            },
+            if (productVariant.variantType.type == VariantTypeEnum.VOLTAGE) ...{
+              const Text('Voltage'),
+            }
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox _getColorVariantContainer() {
+    return SizedBox(
+      height: 28,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: productVariant.variantList.length,
+        itemBuilder: (context, index) {
+          String variantColor = 'ff${productVariant.variantList[index].value}';
+          int hexColor = int.parse(variantColor, radix: 16);
+          return Container(
+            margin: const EdgeInsets.only(left: 12),
+            width: 28,
+            decoration: BoxDecoration(
+              color: Color(hexColor),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  SizedBox _getStorageVariantContainer() {
+    return SizedBox(
+      height: 24,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: productVariant.variantList.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(left: 12),
+            width: 64,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              // border: Border.all(
+              //   width: 1,
+              //   color: Colors.black,
+              // ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(child: Text(productVariant.variantList[index].name!)),
+          );
+        },
+      ),
+    );
   }
 }
 

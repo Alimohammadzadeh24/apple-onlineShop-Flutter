@@ -104,14 +104,7 @@ Widget _getProductDetailScreenContent(ProductState state) {
             child: Text(l),
           );
         }, (productVariantList) {
-          for (var productVariant in productVariantList) {
-            if (productVariant.variantList.isNotEmpty) {
-              return _VariantContainer(productVariant);
-            }
-          }
-          return const SliverToBoxAdapter(
-            child: Text('error'),
-          );
+          return VariantContainerGenerator(productVariantList);
         }),
         SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -341,69 +334,96 @@ Widget _getProductDetailScreenContent(ProductState state) {
   }
 }
 
+class VariantContainerGenerator extends StatelessWidget {
+  final List<ProductVariant> productVariantList;
+  const VariantContainerGenerator(
+    this.productVariantList, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          for (var productVariant in productVariantList) ...{
+            if (productVariant.variantList.isNotEmpty) ...{
+              _VariantContainer(productVariant)
+            }
+          }
+        ],
+      ),
+    );
+  }
+}
+
 class _VariantContainer extends StatelessWidget {
   final ProductVariant productVariant;
   const _VariantContainer(this.productVariant);
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(productVariant.variantType.title!),
-            ),
-            if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
-              _getColorVariantContainer(),
-            },
-            if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
-              _getStorageVariantContainer(),
-            },
-            if (productVariant.variantType.type == VariantTypeEnum.VOLTAGE) ...{
-              const Text('Voltage'),
-            }
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(productVariant.variantType.title!),
+          ),
+          if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
+            _getColorVariantContainer(),
+          },
+          if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
+            _getStorageVariantContainer(),
+          },
+          if (productVariant.variantType.type == VariantTypeEnum.VOLTAGE) ...{
+            const Text('Voltage'),
+          }
+        ],
       ),
     );
   }
 
-  SizedBox _getColorVariantContainer() {
-    return SizedBox(
-      height: 28,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: productVariant.variantList.length,
-        itemBuilder: (context, index) {
-          String variantColor = 'ff${productVariant.variantList[index].value}';
-          int hexColor = int.parse(variantColor, radix: 16);
-          return Container(
-            margin: const EdgeInsets.only(left: 12),
-            width: 28,
-            decoration: BoxDecoration(
-              color: Color(hexColor),
-              borderRadius: BorderRadius.circular(8),
-            ),
-          );
-        },
-      ),
+  Column _getColorVariantContainer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 28,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: productVariant.variantList.length,
+            itemBuilder: (context, index) {
+              String variantColor =
+                  'ff${productVariant.variantList[index].value}';
+              int hexColor = int.parse(variantColor, radix: 16);
+              return Container(
+                margin: const EdgeInsets.only(left: 12),
+                width: 28,
+                decoration: BoxDecoration(
+                  color: Color(hexColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
   SizedBox _getStorageVariantContainer() {
     return SizedBox(
-      height: 24,
+      height: 30,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: productVariant.variantList.length,
         itemBuilder: (context, index) {
           return Container(
             margin: const EdgeInsets.only(left: 12),
-            width: 64,
+            width: 84,
             decoration: BoxDecoration(
               color: Colors.white,
               // border: Border.all(

@@ -44,7 +44,7 @@ class ProductItem extends StatelessWidget {
             builder: (context) => BlocProvider(
               create: (context) => ProductBloc(),
               child: ProductDetailScreen(
-                productId: product.id,
+                product: product,
               ),
             ),
           ),

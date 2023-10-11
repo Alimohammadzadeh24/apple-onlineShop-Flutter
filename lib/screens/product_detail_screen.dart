@@ -6,6 +6,7 @@ import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
 import 'package:apple_online_shop/bloc/product/product_bloc.dart';
 import 'package:apple_online_shop/bloc/product/product_event.dart';
 import 'package:apple_online_shop/bloc/product/product_state.dart';
+import 'package:apple_online_shop/data/model/product.dart';
 import 'package:apple_online_shop/data/model/product_image.dart';
 import 'package:apple_online_shop/data/model/product_variant.dart';
 import 'package:apple_online_shop/data/model/variant_type.dart';
@@ -15,8 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final String productId;
-  const ProductDetailScreen({super.key, required this.productId});
+  final Product product;
+  const ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -25,8 +26,9 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
-    BlocProvider.of<ProductBloc>(context)
-        .add(ProductInitialEvent(productId: widget.productId));
+    BlocProvider.of<ProductBloc>(context).add(
+      ProductInitialEvent(productId: widget.product.id),
+    );
     super.initState();
   }
 
@@ -41,7 +43,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) {
-                return _getProductDetailScreenContent(state);
+                return _getProductDetailScreenContent(state, widget.product);
               },
             ),
           ),
@@ -51,7 +53,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-Widget _getProductDetailScreenContent(ProductState state) {
+Widget _getProductDetailScreenContent(ProductState state, Product product) {
   if (state is ProductLoadingState) {
     return const Center(
       child: SizedBox(
@@ -72,17 +74,17 @@ Widget _getProductDetailScreenContent(ProductState state) {
         const SliverPadding(padding: EdgeInsets.only(top: 20)),
         const SliverToBoxAdapter(
           child: ScreenAppBar(
-            title: 'آیفون',
+            title: 'مشخصات محصول',
             havePop: true,
           ),
         ),
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              'آیفون SE 2020',
+              product.name,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontFamily: 'SB',
               ),
@@ -97,7 +99,7 @@ Widget _getProductDetailScreenContent(ProductState state) {
             child: Text('خطای بارگیرری عکس ها'),
           );
         }, (r) {
-          return _GalleryWidget(r);
+          return _GalleryWidget(r, product.thumbnail);
         }),
         state.productVariant.fold((l) {
           return SliverToBoxAdapter(
@@ -373,10 +375,10 @@ class _VariantContainer extends StatelessWidget {
             child: Text(productVariant.variantType.title!),
           ),
           if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
-            _getColorVariantContainer(),
+            ColorVariantContainer(productVariant),
           },
           if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
-            _getStorageVariantContainer(),
+            StorageVariantContainer(productVariant),
           },
           if (productVariant.variantType.type == VariantTypeEnum.VOLTAGE) ...{
             const Text('Voltage'),
@@ -385,8 +387,20 @@ class _VariantContainer extends StatelessWidget {
       ),
     );
   }
+}
 
-  Column _getColorVariantContainer() {
+class ColorVariantContainer extends StatefulWidget {
+  final ProductVariant productVariant;
+  const ColorVariantContainer(this.productVariant, {super.key});
+
+  @override
+  State<ColorVariantContainer> createState() => _ColorVariantContainerState();
+}
+
+class _ColorVariantContainerState extends State<ColorVariantContainer> {
+  int selectedItemIndex = 0;
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -394,17 +408,29 @@ class _VariantContainer extends StatelessWidget {
           height: 28,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: productVariant.variantList.length,
+            itemCount: widget.productVariant.variantList.length,
             itemBuilder: (context, index) {
               String variantColor =
-                  'ff${productVariant.variantList[index].value}';
+                  'ff${widget.productVariant.variantList[index].value}';
               int hexColor = int.parse(variantColor, radix: 16);
-              return Container(
-                margin: const EdgeInsets.only(left: 12),
-                width: 28,
-                decoration: BoxDecoration(
-                  color: Color(hexColor),
-                  borderRadius: BorderRadius.circular(8),
+              return GestureDetector(
+                onTap: () => setState(() => selectedItemIndex = index),
+                child: Container(
+                  margin: const EdgeInsets.only(left: 12),
+                  width: 28,
+                  decoration: BoxDecoration(
+                    color: Color(hexColor),
+                    border: (selectedItemIndex == index)
+                        ? Border.all(
+                            width: 2,
+                            color: CustomColors.blue,
+                          )
+                        : Border.all(
+                            width: 2,
+                            color: CustomColors.backgroundColor,
+                          ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               );
             },
@@ -413,26 +439,43 @@ class _VariantContainer extends StatelessWidget {
       ],
     );
   }
+}
 
-  SizedBox _getStorageVariantContainer() {
+class StorageVariantContainer extends StatefulWidget {
+  final ProductVariant productVariant;
+  const StorageVariantContainer(this.productVariant, {super.key});
+
+  @override
+  State<StorageVariantContainer> createState() =>
+      _StorageVariantContainerState();
+}
+
+class _StorageVariantContainerState extends State<StorageVariantContainer> {
+  int selectedItemIndex = 0;
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       height: 30,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: productVariant.variantList.length,
+        itemCount: widget.productVariant.variantList.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.only(left: 12),
-            width: 84,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border.all(
-              //   width: 1,
-              //   color: Colors.black,
-              // ),
-              borderRadius: BorderRadius.circular(8),
+          return GestureDetector(
+            onTap: () => setState(() => selectedItemIndex = index),
+            child: Container(
+              margin: const EdgeInsets.only(left: 12),
+              width: 84,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: (selectedItemIndex == index)
+                    ? Border.all(width: 2, color: CustomColors.blue)
+                    : Border.all(width: 2, color: CustomColors.backgroundColor),
+              ),
+              child: Center(
+                child: Text(widget.productVariant.variantList[index].name!),
+              ),
             ),
-            child: Center(child: Text(productVariant.variantList[index].name!)),
           );
         },
       ),
@@ -442,7 +485,8 @@ class _VariantContainer extends StatelessWidget {
 
 class _GalleryWidget extends StatelessWidget {
   final List<Productimage> productImageList;
-  const _GalleryWidget(this.productImageList);
+  final String defaultThumbnailUrl;
+  const _GalleryWidget(this.productImageList, this.defaultThumbnailUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -463,34 +507,38 @@ class _GalleryWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CachedNetworkImage(
-                imageUrl: productImageList[0].imgUrl!,
+                imageUrl: (productImageList.isEmpty)
+                    ? defaultThumbnailUrl
+                    : productImageList[0].imgUrl!,
                 width: 150,
               ),
-              SizedBox(
-                height: 72,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: productImageList.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      padding: const EdgeInsets.all(4),
-                      width: 72,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          width: 1,
-                          color: CustomColors.blue,
+              if (productImageList.isNotEmpty) ...{
+                SizedBox(
+                  height: 72,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: productImageList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.all(4),
+                        width: 72,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            width: 1,
+                            color: CustomColors.blue,
+                          ),
                         ),
-                      ),
-                      child: CachedImage(
-                        radius: 12,
-                        imageUrl: productImageList[index].imgUrl!,
-                      ),
-                    );
-                  },
+                        child: CachedImage(
+                          radius: 12,
+                          imageUrl: productImageList[index].imgUrl!,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              )
+              }
             ],
           ),
         ),
@@ -577,7 +625,7 @@ class PriceTagButton extends StatelessWidget {
                         'تومان',
                         style: TextStyle(
                             fontFamily: 'sm',
-                            fontSize: 12,
+                            fontSize: 10,
                             color: Colors.white),
                       ),
                       const SizedBox(

@@ -3,7 +3,6 @@ import 'package:apple_online_shop/Widgets/Home/banner_slider.dart';
 import 'package:apple_online_shop/Widgets/Home/home_category_list.dart';
 import 'package:apple_online_shop/Widgets/Home/home_product_list.dart';
 import 'package:apple_online_shop/bloc/home/home_bloc.dart';
-import 'package:apple_online_shop/bloc/home/home_event.dart';
 import 'package:apple_online_shop/bloc/home/home_state.dart';
 import 'package:apple_online_shop/data/model/banners.dart';
 import 'package:apple_online_shop/data/model/category.dart';
@@ -13,19 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(HomeGetInitializedDataEvent());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

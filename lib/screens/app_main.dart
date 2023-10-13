@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/bloc/category/category_bloc.dart';
 import 'package:apple_online_shop/bloc/home/home_bloc.dart';
+import 'package:apple_online_shop/bloc/home/home_event.dart';
 import 'package:apple_online_shop/screens/basket_screen.dart';
 import 'package:apple_online_shop/screens/category_screen.dart';
 import 'package:apple_online_shop/screens/home_screen.dart';
@@ -22,7 +23,11 @@ class _AppMainState extends State<AppMain> {
   List<Widget> getScreens() {
     return [
       BlocProvider(
-        create: (context) => HomeBloc(),
+        create: (context) {
+          var bloc = HomeBloc();
+          bloc.add(HomeGetInitializedDataEvent());
+          return bloc;
+        },
         child: const HomeScreen(),
       ),
       BlocProvider(

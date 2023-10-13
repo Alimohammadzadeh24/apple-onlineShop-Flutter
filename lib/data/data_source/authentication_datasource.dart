@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 
 abstract class IAuthenticationDataSourcec {
   Future<void> register(
-      String username, String password, String passwordConfirm);
+    String username,
+    String password,
+    String passwordConfirm,
+  );
   Future<String> login(String username, String password);
 }
 

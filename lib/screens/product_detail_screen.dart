@@ -4,7 +4,6 @@ import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/Widgets/cached_image.dart';
 import 'package:apple_online_shop/Widgets/screen_app_bar.dart';
 import 'package:apple_online_shop/bloc/product/product_bloc.dart';
-import 'package:apple_online_shop/bloc/product/product_event.dart';
 import 'package:apple_online_shop/bloc/product/product_state.dart';
 import 'package:apple_online_shop/data/model/product.dart';
 import 'package:apple_online_shop/data/model/product_image.dart';
@@ -24,13 +23,6 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<ProductBloc>(context).add(
-      ProductInitialEvent(productId: widget.product.id),
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +64,23 @@ Widget _getProductDetailScreenContent(ProductState state, Product product) {
     return CustomScrollView(
       slivers: [
         const SliverPadding(padding: EdgeInsets.only(top: 20)),
-        const SliverToBoxAdapter(
-          child: ScreenAppBar(
-            title: 'مشخصات محصول',
-            havePop: true,
-          ),
+        state.productCategory.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: ScreenAppBar(
+                title: l,
+                havePop: true,
+              ),
+            );
+          },
+          (r) {
+            return SliverToBoxAdapter(
+              child: ScreenAppBar(
+                title: r.title!,
+                havePop: true,
+              ),
+            );
+          },
         ),
         SliverToBoxAdapter(
           child: Padding(

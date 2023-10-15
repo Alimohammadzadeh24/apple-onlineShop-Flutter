@@ -1,5 +1,6 @@
 import 'package:apple_online_shop/Constant/color.dart';
 import 'package:apple_online_shop/bloc/product/product_bloc.dart';
+import 'package:apple_online_shop/bloc/product/product_event.dart';
 import 'package:apple_online_shop/data/model/product.dart';
 import 'package:apple_online_shop/screens/product_detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -42,7 +43,16 @@ class ProductItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => ProductBloc(),
+              create: (context) {
+                var bloc = ProductBloc();
+                bloc.add(
+                  ProductInitialEvent(
+                    productId: product.id,
+                    productCategoryId: product.categoryId,
+                  ),
+                );
+                return bloc;
+              },
               child: ProductDetailScreen(
                 product: product,
               ),
